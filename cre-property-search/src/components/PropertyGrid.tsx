@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Property } from '../types/Property';
 import PropertyCard from './PropertyCard';
 import PropertyModal from './PropertyModal';
+import SearchAndFilters from './SearchAndFilters';
 
 interface PropertyGridProps {
   properties: Property[];
@@ -10,6 +11,7 @@ interface PropertyGridProps {
 const PropertyGrid = ({ properties }: PropertyGridProps) => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filteredProperties, setFilteredProperties] = useState<Property[]>(properties);
 
   const handlePropertyClick = (property: Property) => {
     setSelectedProperty(property);
@@ -20,6 +22,11 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
     setIsModalOpen(false);
     setSelectedProperty(null);
   };
+
+  // Update filtered properties when properties change
+  useEffect(() => {
+    setFilteredProperties(properties);
+  }, [properties]);
 
   // Safety check for properties array
   if (!properties || !Array.isArray(properties)) {
@@ -47,27 +54,33 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
           </p>
         </div>
 
+        {/* Search and Filters */}
+        <SearchAndFilters
+          properties={properties}
+          onFilteredProperties={setFilteredProperties}
+        />
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-blue-600">{properties.length}</div>
-            <div className="text-sm text-gray-600">Total Properties</div>
+            <div className="text-2xl font-bold text-blue-600">{filteredProperties.length}</div>
+            <div className="text-sm text-gray-600">Showing Properties</div>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="text-2xl font-bold text-green-600">
-              {properties.filter(p => p.type === 'office').length}
+              {filteredProperties.filter(p => p.type === 'office').length}
             </div>
             <div className="text-sm text-gray-600">Office Spaces</div>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="text-2xl font-bold text-orange-600">
-              {properties.filter(p => p.type === 'warehouse').length}
+              {filteredProperties.filter(p => p.type === 'warehouse').length}
             </div>
             <div className="text-sm text-gray-600">Warehouses</div>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="text-2xl font-bold text-purple-600">
-              {properties.filter(p => p.type === 'retail').length}
+              {filteredProperties.filter(p => p.type === 'retail').length}
             </div>
             <div className="text-sm text-gray-600">Retail Spaces</div>
           </div>
@@ -75,7 +88,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
 
         {/* Property Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {properties.map((property) => (
+          {filteredProperties.map((property) => (
             <PropertyCard 
               key={property.id} 
               property={property} 
@@ -87,7 +100,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
         {/* Footer */}
         <div className="mt-12 text-center">
           <p className="text-gray-500 text-sm">
-            Showing all {properties.length} properties
+            Showing {filteredProperties.length} of {properties.length} properties
           </p>
         </div>
       </div>
