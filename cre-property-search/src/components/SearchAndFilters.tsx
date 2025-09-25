@@ -284,12 +284,12 @@ const SearchAndFilters = ({ properties, onFilteredProperties }: SearchAndFilters
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
       {/* Search Bar */}
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -298,21 +298,21 @@ const SearchAndFilters = ({ properties, onFilteredProperties }: SearchAndFilters
             placeholder="Search properties by title, description, location, or amenities..."
             value={filters.searchTerm}
             onChange={handleSearchChange}
-            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
           />
         </div>
       </div>
 
       {/* Filters Toggle */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-3 sm:gap-0">
         <button
           onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-          className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
+          className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors text-sm sm:text-base"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z" />
           </svg>
-          <span className="font-medium">Filters</span>
+          <span className="font-medium">{isFiltersOpen ? 'Hide Filters' : 'Show Filters'}</span>
           <svg className={`w-4 h-4 transition-transform ${isFiltersOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
@@ -321,7 +321,7 @@ const SearchAndFilters = ({ properties, onFilteredProperties }: SearchAndFilters
         {(filters.searchTerm || filters.selectedTypes.length > 0 || filters.priceRange[0] !== minPrice || filters.priceRange[1] !== maxPrice || filters.sizeRange[0] !== minSize || filters.sizeRange[1] !== maxSize || filters.selectedLocations.length > 0 || filters.selectedAmenities.length > 0 || filters.sortBy !== 'date_listed') && (
           <button
             onClick={clearFilters}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="text-sm text-blue-600 hover:text-blue-800 font-medium self-start sm:self-auto"
           >
             Clear all filters
           </button>
@@ -330,7 +330,7 @@ const SearchAndFilters = ({ properties, onFilteredProperties }: SearchAndFilters
 
       {/* Filters Panel */}
       {isFiltersOpen && (
-        <div className="space-y-6 border-t border-gray-200 pt-6">
+        <div className="space-y-4 sm:space-y-6 border-t border-gray-200 pt-4 sm:pt-6">
           {/* Property Type Filter */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Property Type</h3>

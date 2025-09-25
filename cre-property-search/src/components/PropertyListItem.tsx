@@ -42,9 +42,9 @@ const PropertyListItem = ({ property, onClick, selected, onToggleSelect }: Prope
       className={`bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300 cursor-pointer ${selected ? 'ring-2 ring-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col md:flex-row">
         {/* Image Section */}
-        <div className="relative w-full lg:w-80 h-48 lg:h-40 flex-shrink-0">
+        <div className="relative w-full md:w-80 lg:w-96 h-48 md:h-40 lg:h-44 flex-shrink-0">
           {/* Selection Checkbox */}
           <label className="absolute top-3 left-3 z-10 inline-flex items-center bg-white/90 backdrop-blur p-1 rounded-md shadow">
             <input
@@ -61,7 +61,7 @@ const PropertyListItem = ({ property, onClick, selected, onToggleSelect }: Prope
           <img
             src={property.images[0] || '/placeholder-property.jpg'}
             alt={property.title}
-            className="w-full h-full object-cover rounded-l-lg lg:rounded-l-lg lg:rounded-r-none"
+            className="w-full h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = 'https://via.placeholder.com/400x300?text=Property+Image';
@@ -80,7 +80,7 @@ const PropertyListItem = ({ property, onClick, selected, onToggleSelect }: Prope
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-4 md:p-6">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             {/* Left Content */}
             <div className="flex-1 lg:mr-6">
@@ -100,18 +100,18 @@ const PropertyListItem = ({ property, onClick, selected, onToggleSelect }: Prope
               {/* Amenities */}
               {property.amenities && property.amenities.length > 0 && (
                 <div className="mb-4">
-                  <div className="flex flex-wrap gap-1">
-                    {property.amenities.slice(0, 4).map((amenity, index) => (
+                  <div className="flex flex-wrap gap-1 md:gap-2">
+                    {property.amenities.slice(0, 5).map((amenity, index) => (
                       <span
                         key={index}
-                        className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
+                        className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs md:text-sm"
                       >
                         {amenity}
                       </span>
                     ))}
-                    {property.amenities.length > 4 && (
-                      <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                        +{property.amenities.length - 4} more
+                    {property.amenities.length > 5 && (
+                      <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs md:text-sm">
+                        +{property.amenities.length - 5} more
                       </span>
                     )}
                   </div>
@@ -120,48 +120,49 @@ const PropertyListItem = ({ property, onClick, selected, onToggleSelect }: Prope
             </div>
 
             {/* Right Content - Stats */}
-            <div className="flex flex-col lg:items-end space-y-4">
+            <div className="flex flex-col lg:items-end space-y-3 lg:space-y-4 mt-4 lg:mt-0">
               {/* Price and Size */}
-              <div className="text-right">
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="text-right lg:text-right">
+                <p className="text-xl md:text-2xl font-bold text-gray-900">
                   {formatPrice(totalPrice)}
                 </p>
-                <p className="text-sm text-gray-500">Total Price</p>
+                <p className="text-xs md:text-sm text-gray-500">Total Price</p>
               </div>
               
-              <div className="text-right">
-                <p className="text-lg font-semibold text-gray-900">
+              <div className="text-right lg:text-right">
+                <p className="text-base md:text-lg font-semibold text-gray-900">
                   {formatSqft(property.total_sqft)} sqft
                 </p>
-                <p className="text-sm text-gray-500">Total Area</p>
+                <p className="text-xs md:text-sm text-gray-500">Total Area</p>
               </div>
 
               {/* Year Built */}
               {property.year_built && (
-                <div className="text-right">
-                  <p className="text-sm text-gray-600">
+                <div className="text-right lg:text-right">
+                  <p className="text-xs md:text-sm text-gray-600">
                     Built in <span className="font-semibold">{property.year_built}</span>
                   </p>
                 </div>
               )}
 
               {/* Date Listed */}
-              <div className="text-right">
-                <p className="text-sm text-gray-500">
+              <div className="text-right lg:text-right">
+                <p className="text-xs md:text-sm text-gray-500">
                   Listed: {new Date(property.date_listed).toLocaleDateString()}
                 </p>
               </div>
 
-              {/* View Details Button */}
-              <button
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClick();
-                }}
-              >
-                View Details
-              </button>
+               {/* View Details Button */}
+               <button
+                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm border border-blue-600"
+                 style={{ backgroundColor: '#2563eb', color: 'white' }}
+                 onClick={(e) => {
+                   e.stopPropagation();
+                   onClick();
+                 }}
+               >
+                 View Details
+               </button>
             </div>
           </div>
         </div>

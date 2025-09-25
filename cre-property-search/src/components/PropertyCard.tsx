@@ -154,7 +154,8 @@ const PropertyCard = ({ property, onClick, selected = false, onToggleSelect }: P
             Listed: {new Date(property.date_listed).toLocaleDateString()}
           </p>
           <button 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm border border-blue-600"
+            style={{ backgroundColor: '#2563eb', color: 'white' }}
             onClick={(e) => {
               e.stopPropagation();
               onClick();

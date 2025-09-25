@@ -41,14 +41,14 @@ const PropertyModal = ({ property, isOpen, onClose }: PropertyModalProps) => {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
-      <div className="relative min-h-full flex items-center justify-center p-4 sm:p-6">
-        <div className="relative w-full max-w-6xl bg-white rounded-xl shadow-2xl border border-gray-200">
+      <div className="relative min-h-full flex items-center justify-center p-2 sm:p-4 lg:p-6">
+        <div className="relative w-full max-w-6xl bg-white rounded-lg sm:rounded-xl shadow-2xl border border-gray-200">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -60,9 +60,9 @@ const PropertyModal = ({ property, isOpen, onClose }: PropertyModalProps) => {
           </button>
 
           {/* Content */}
-          <div className="flex flex-col lg:flex-row">
+          <div className="flex flex-col lg:flex-row p-4 sm:p-6">
             {/* Image Gallery */}
-            <div className="lg:w-1/2">
+            <div className="lg:w-1/2 mb-6 lg:mb-0 lg:pr-6">
               <div className="relative h-64 sm:h-80 lg:h-96">
                 <img
                   src={property.images[0] || 'https://via.placeholder.com/800x600?text=Property+Image'}

@@ -60,14 +60,14 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Commercial Real Estate Properties
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Discover {properties.length} premium commercial properties across various markets
           </p>
         </div>
@@ -79,17 +79,17 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
         />
 
         {/* View Toggle and Stats */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
           {/* View Toggle */}
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium text-gray-700">View:</span>
+          <div className="flex items-center justify-between sm:justify-start">
+            <span className="text-sm font-medium text-gray-700 mr-3">View:</span>
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   viewMode === 'grid'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white text-blue-600 shadow-sm border-2 border-blue-500'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,8 +101,8 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
                 onClick={() => setViewMode('list')}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   viewMode === 'list'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white text-blue-600 shadow-sm border-2 border-blue-500'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,34 +120,34 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-blue-600">{filteredProperties.length}</div>
-            <div className="text-sm text-gray-600">Showing Properties</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
+            <div className="text-xl sm:text-2xl font-bold text-blue-600">{filteredProperties.length}</div>
+            <div className="text-xs sm:text-sm text-gray-600">Showing Properties</div>
           </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-green-600">
+          <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
+            <div className="text-xl sm:text-2xl font-bold text-green-600">
               {filteredProperties.filter(p => p.type === 'office').length}
             </div>
-            <div className="text-sm text-gray-600">Office Spaces</div>
+            <div className="text-xs sm:text-sm text-gray-600">Office Spaces</div>
           </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-orange-600">
+          <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
+            <div className="text-xl sm:text-2xl font-bold text-orange-600">
               {filteredProperties.filter(p => p.type === 'warehouse').length}
             </div>
-            <div className="text-sm text-gray-600">Warehouses</div>
+            <div className="text-xs sm:text-sm text-gray-600">Warehouses</div>
           </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="text-2xl font-bold text-purple-600">
+          <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
+            <div className="text-xl sm:text-2xl font-bold text-purple-600">
               {filteredProperties.filter(p => p.type === 'retail').length}
             </div>
-            <div className="text-sm text-gray-600">Retail Spaces</div>
+            <div className="text-xs sm:text-sm text-gray-600">Retail Spaces</div>
           </div>
         </div>
 
         {/* Property Display */}
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredProperties.map((property) => (
               <PropertyCard 
                 key={property.id} 
@@ -159,7 +159,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {filteredProperties.map((property) => (
               <PropertyListItem 
                 key={property.id} 
@@ -183,15 +183,15 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
 
       {/* Floating Compare Button */}
       {selectedIds.size >= 2 && (
-        <div className="fixed bottom-6 right-6 z-40">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
           <button
             onClick={() => setIsCompareOpen(true)}
-            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-black px-5 py-3 rounded-full shadow-lg border border-gray-200 transition-colors"
+            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-black px-3 sm:px-5 py-2 sm:py-3 rounded-full shadow-lg border border-gray-200 transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h6M3 12h9m-9 5h12" />
             </svg>
-            <span className="font-medium">Compare ({selectedIds.size})</span>
+            <span className="text-sm sm:text-base font-medium">Compare ({selectedIds.size})</span>
           </button>
         </div>
       )}
