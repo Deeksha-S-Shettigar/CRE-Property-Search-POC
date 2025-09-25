@@ -2,9 +2,10 @@ import type { Property } from '../types/Property';
 
 interface PropertyCardProps {
   property: Property;
+  onClick: () => void;
 }
 
-const PropertyCard = ({ property }: PropertyCardProps) => {
+const PropertyCard = ({ property, onClick }: PropertyCardProps) => {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -35,7 +36,10 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
   const totalPrice = property.price_per_sqft * property.total_sqft;
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div 
+      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      onClick={onClick}
+    >
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
         <img
@@ -134,7 +138,13 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
           <p className="text-sm text-gray-500">
             Listed: {new Date(property.date_listed).toLocaleDateString()}
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+          <button 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
             View Details
           </button>
         </div>

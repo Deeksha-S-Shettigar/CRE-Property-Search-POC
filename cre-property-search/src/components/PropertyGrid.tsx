@@ -1,11 +1,26 @@
+import { useState } from 'react';
 import type { Property } from '../types/Property';
 import PropertyCard from './PropertyCard';
+import PropertyModal from './PropertyModal';
 
 interface PropertyGridProps {
   properties: Property[];
 }
 
 const PropertyGrid = ({ properties }: PropertyGridProps) => {
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePropertyClick = (property: Property) => {
+    setSelectedProperty(property);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProperty(null);
+  };
+
   // Safety check for properties array
   if (!properties || !Array.isArray(properties)) {
     return (
@@ -61,7 +76,11 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
         {/* Property Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            <PropertyCard 
+              key={property.id} 
+              property={property} 
+              onClick={() => handlePropertyClick(property)}
+            />
           ))}
         </div>
 
@@ -72,6 +91,13 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
           </p>
         </div>
       </div>
+
+      {/* Property Modal */}
+      <PropertyModal
+        property={selectedProperty}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
