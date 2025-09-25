@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Property } from '../types/Property';
 import PropertyCard from './PropertyCard';
 import PropertyModal from './PropertyModal';
+import CompareModal from './CompareModal';
 import SearchAndFilters from './SearchAndFilters';
 
 interface PropertyGridProps {
@@ -12,10 +13,25 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(properties);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
 
   const handlePropertyClick = (property: Property) => {
     setSelectedProperty(property);
     setIsModalOpen(true);
+  };
+
+  const toggleSelect = (id: string, checked: boolean) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (checked) {
+        if (next.size >= 4) return next; // enforce max 4
+        next.add(id);
+      } else {
+        next.delete(id);
+      }
+      return next;
+    });
   };
 
   const handleCloseModal = () => {
@@ -93,6 +109,8 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
               key={property.id} 
               property={property} 
               onClick={() => handlePropertyClick(property)}
+              selected={selectedIds.has(property.id)}
+              onToggleSelect={(checked) => toggleSelect(property.id, checked)}
             />
           ))}
         </div>
@@ -110,6 +128,29 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
         property={selectedProperty}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+      />
+
+      {/* Floating Compare Button */}
+      {selectedIds.size >= 2 && (
+        <div className="fixed bottom-6 right-6 z-40">
+          <button
+            onClick={() => setIsCompareOpen(true)}
+            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-black px-5 py-3 rounded-full shadow-lg border border-gray-200 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h6M3 12h9m-9 5h12" />
+            </svg>
+            <span className="font-medium">Compare ({selectedIds.size})</span>
+          </button>
+        </div>
+      )}
+
+      {/* Compare Modal */}
+      <CompareModal
+        properties={filteredProperties.filter(p => selectedIds.has(p.id)).slice(0, 4)}
+        isOpen={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+        onRemove={(id) => toggleSelect(id, false)}
       />
     </div>
   );

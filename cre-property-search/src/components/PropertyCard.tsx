@@ -3,9 +3,11 @@ import type { Property } from '../types/Property';
 interface PropertyCardProps {
   property: Property;
   onClick: () => void;
+  selected?: boolean;
+  onToggleSelect?: (checked: boolean) => void;
 }
 
-const PropertyCard = ({ property, onClick }: PropertyCardProps) => {
+const PropertyCard = ({ property, onClick, selected = false, onToggleSelect }: PropertyCardProps) => {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -37,11 +39,24 @@ const PropertyCard = ({ property, onClick }: PropertyCardProps) => {
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      className={`bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer ${selected ? 'ring-2 ring-blue-500' : ''}`}
       onClick={onClick}
     >
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
+        {/* Selection Checkbox */}
+        <label className="absolute top-3 left-3 z-10 inline-flex items-center bg-white/90 backdrop-blur p-1 rounded-md shadow">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={(e) => {
+              e.stopPropagation();
+              onToggleSelect && onToggleSelect(e.target.checked);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+        </label>
         <img
           src={property.images[0] || '/placeholder-property.jpg'}
           alt={property.title}

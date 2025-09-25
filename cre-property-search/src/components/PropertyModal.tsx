@@ -42,13 +42,13 @@ const PropertyModal = ({ property, isOpen, onClose }: PropertyModalProps) => {
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
       
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
-        <div className="relative w-full max-w-6xl bg-white rounded-lg shadow-xl">
+      <div className="relative min-h-full flex items-center justify-center p-4 sm:p-6">
+        <div className="relative w-full max-w-6xl bg-white rounded-xl shadow-2xl border border-gray-200">
           {/* Close Button */}
           <button
             onClick={onClose}
