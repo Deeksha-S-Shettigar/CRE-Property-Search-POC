@@ -27,8 +27,8 @@ const CompareModal = ({ properties, isOpen, onClose, onRemove }: CompareModalPro
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative min-h-full flex items-center justify-center p-2 sm:p-4">
-        <div className="relative w-full max-w-7xl bg-white rounded-lg sm:rounded-xl shadow-2xl border border-gray-200">
+      <div className="relative min-h-full flex items-center justify-center p-2 sm:p-4 lg:p-6">
+        <div className="relative w-full max-w-7xl bg-white rounded-lg sm:rounded-xl shadow-2xl border border-gray-200 max-h-[90vh] overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Compare Properties</h2>
             <button onClick={onClose} className="p-2 rounded hover:bg-gray-100">
@@ -38,9 +38,9 @@ const CompareModal = ({ properties, isOpen, onClose, onRemove }: CompareModalPro
             </button>
           </div>
 
-          <div className="p-4 sm:p-6">
+          <div className="p-4 sm:p-6 overflow-y-auto flex-1">
             {/* Mobile Layout - Stacked Cards */}
-            <div className="block sm:hidden space-y-4">
+            <div className="block md:hidden space-y-4">
               {properties.map((property, index) => {
                 const tp = totalPrice(property);
                 const a = age(property);
@@ -100,22 +100,85 @@ const CompareModal = ({ properties, isOpen, onClose, onRemove }: CompareModalPro
               })}
             </div>
 
+            {/* Tablet Layout - Horizontal Cards */}
+            <div className="hidden sm:block md:hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {properties.map((property, index) => {
+                  const tp = totalPrice(property);
+                  const a = age(property);
+                  const isPriceBest = tp === bestPrice;
+                  const isSizeBest = property.total_sqft === bestSize;
+                  const isAgeBest = a !== null && a === bestAge;
+                  
+                  return (
+                    <div key={property.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-base font-semibold text-gray-900 line-clamp-2">{property.title}</h3>
+                          <p className="text-sm text-gray-600 mt-1">{property.address.city}, {property.address.state}</p>
+                        </div>
+                        <button 
+                          onClick={() => onRemove(property.id)} 
+                          className="text-sm text-red-600 hover:text-red-700 ml-2"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      
+                      <img
+                        src={property.images[0] || 'https://via.placeholder.com/320x200?text=Property'}
+                        alt={property.title}
+                        className="w-full h-40 object-cover rounded mb-4"
+                        onError={(e) => {
+                          const t = e.target as HTMLImageElement;
+                          t.src = 'https://via.placeholder.com/320x200?text=Property';
+                        }}
+                      />
+                      
+                      <div className="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                          <div className={`inline-block px-3 py-1 rounded text-sm font-semibold mb-2 ${badge(isPriceBest)}`}>
+                            {isPriceBest ? 'Best Price' : '—'}
+                          </div>
+                          <div className="text-base font-semibold">{formatPrice(tp)}</div>
+                          <div className="text-sm text-gray-500">{formatPrice(property.price_per_sqft)}/sqft</div>
+                        </div>
+                        <div>
+                          <div className={`inline-block px-3 py-1 rounded text-sm font-semibold mb-2 ${badge(isSizeBest)}`}>
+                            {isSizeBest ? 'Largest' : '—'}
+                          </div>
+                          <div className="text-base font-semibold">{formatNumber(property.total_sqft)} sqft</div>
+                        </div>
+                        <div>
+                          <div className={`inline-block px-3 py-1 rounded text-sm font-semibold mb-2 ${isAgeBest ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                            {isAgeBest ? 'Newest' : '—'}
+                          </div>
+                          <div className="text-base font-semibold">{a !== null ? `${a} yrs` : 'N/A'}</div>
+                          {property.year_built && <div className="text-sm text-gray-500">{property.year_built}</div>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Desktop Layout - Table */}
-            <div className="hidden sm:block overflow-x-auto">
-              <div className="min-w-[600px] grid" style={{ gridTemplateColumns: `200px repeat(${properties.length}, minmax(200px, 1fr))` }}>
+            <div className="hidden md:block overflow-x-auto">
+              <div className="min-w-[900px] grid" style={{ gridTemplateColumns: `240px repeat(${properties.length}, minmax(240px, 1fr))` }}>
                 {/* Header column */}
                 <div />
                 {properties.map(p => (
-                  <div key={p.id} className="px-3">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">{p.title}</h3>
-                      <button onClick={() => onRemove(p.id)} className="text-xs text-red-600 hover:text-red-700">Remove</button>
+                  <div key={p.id} className="px-4 py-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <h3 className="text-base font-semibold text-gray-900 leading-snug line-clamp-2">{p.title}</h3>
+                      <button onClick={() => onRemove(p.id)} className="text-sm text-red-600 hover:text-red-700 flex-shrink-0">Remove</button>
                     </div>
-                    <p className="text-xs text-gray-600 mb-2">{p.address.city}, {p.address.state}</p>
+                    <p className="text-sm text-gray-600 mb-3">{p.address.city}, {p.address.state}</p>
                     <img
                       src={p.images[0] || 'https://via.placeholder.com/320x200?text=Property'}
                       alt={p.title}
-                      className="w-full h-28 object-cover rounded"
+                      className="w-full h-32 object-cover rounded"
                       onError={(e) => {
                         const t = e.target as HTMLImageElement;
                         t.src = 'https://via.placeholder.com/320x200?text=Property';
@@ -125,41 +188,41 @@ const CompareModal = ({ properties, isOpen, onClose, onRemove }: CompareModalPro
                 ))}
 
                 {/* Price row */}
-                <div className="px-3 py-4 border-t font-medium text-gray-800">Total Price</div>
+                <div className="px-4 py-5 border-t font-semibold text-gray-800 text-base">Total Price</div>
                 {properties.map(p => {
                   const tp = totalPrice(p);
                   const isBest = tp === bestPrice;
                   return (
-                    <div key={p.id} className="px-3 py-4 border-t">
-                      <div className={`inline-block px-2 py-1 rounded text-xs font-semibold ${badge(isBest)}`}>{isBest ? 'Better' : 'Worse'}</div>
-                      <div className="mt-2 text-lg font-semibold">{formatPrice(tp)}</div>
-                      <div className="text-xs text-gray-500">{formatPrice(p.price_per_sqft)}/sqft</div>
+                    <div key={p.id} className="px-4 py-5 border-t">
+                      <div className={`inline-block px-3 py-1 rounded text-sm font-semibold mb-3 ${badge(isBest)}`}>{isBest ? 'Best Price' : 'Higher'}</div>
+                      <div className="text-xl font-bold">{formatPrice(tp)}</div>
+                      <div className="text-sm text-gray-500 mt-1">{formatPrice(p.price_per_sqft)}/sqft</div>
                     </div>
                   );
                 })}
 
                 {/* Size row */}
-                <div className="px-3 py-4 border-t font-medium text-gray-800">Size</div>
+                <div className="px-4 py-5 border-t font-semibold text-gray-800 text-base">Size</div>
                 {properties.map(p => {
                   const isBest = p.total_sqft === bestSize;
                   return (
-                    <div key={p.id} className="px-3 py-4 border-t">
-                      <div className={`inline-block px-2 py-1 rounded text-xs font-semibold ${badge(isBest)}`}>{isBest ? 'Better' : 'Worse'}</div>
-                      <div className="mt-2 text-lg font-semibold">{formatNumber(p.total_sqft)} sqft</div>
+                    <div key={p.id} className="px-4 py-5 border-t">
+                      <div className={`inline-block px-3 py-1 rounded text-sm font-semibold mb-3 ${badge(isBest)}`}>{isBest ? 'Largest' : 'Smaller'}</div>
+                      <div className="text-xl font-bold">{formatNumber(p.total_sqft)} sqft</div>
                     </div>
                   );
                 })}
 
                 {/* Age row */}
-                <div className="px-3 py-4 border-t font-medium text-gray-800">Age</div>
+                <div className="px-4 py-5 border-t font-semibold text-gray-800 text-base">Age</div>
                 {properties.map(p => {
                   const a = age(p);
                   const isBest = a !== null && a === bestAge;
                   return (
-                    <div key={p.id} className="px-3 py-4 border-t">
-                      <div className={`inline-block px-2 py-1 rounded text-xs font-semibold ${isBest ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{isBest ? 'Newer' : '—'}</div>
-                      <div className="mt-2 text-lg font-semibold">{a !== null ? `${a} yrs` : 'N/A'}</div>
-                      {p.year_built && <div className="text-xs text-gray-500">Built {p.year_built}</div>}
+                    <div key={p.id} className="px-4 py-5 border-t">
+                      <div className={`inline-block px-3 py-1 rounded text-sm font-semibold mb-3 ${isBest ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{isBest ? 'Newest' : 'Older'}</div>
+                      <div className="text-xl font-bold">{a !== null ? `${a} yrs` : 'N/A'}</div>
+                      {p.year_built && <div className="text-sm text-gray-500 mt-1">Built {p.year_built}</div>}
                     </div>
                   );
                 })}

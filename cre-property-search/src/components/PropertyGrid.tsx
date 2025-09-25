@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Property } from '../types/Property';
 import PropertyCard from './PropertyCard';
 import PropertyListItem from './PropertyListItem';
@@ -17,6 +17,12 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  
+  // Infinite scroll state
+  const [visibleCount, setVisibleCount] = useState(8);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef<HTMLDivElement>(null);
 
   const handlePropertyClick = (property: Property) => {
     setSelectedProperty(property);
@@ -44,7 +50,57 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
   // Update filtered properties when properties change
   useEffect(() => {
     setFilteredProperties(properties);
+    setVisibleCount(8); // Reset visible count when properties change
+    setHasMore(properties.length > 8);
   }, [properties]);
+
+  // Reset visible count when filtered properties change (due to filtering)
+  useEffect(() => {
+    setVisibleCount(8);
+    setHasMore(filteredProperties.length > 8);
+  }, [filteredProperties]);
+
+  // Load more properties function
+  const loadMoreProperties = useCallback(() => {
+    if (isLoadingMore || !hasMore) return;
+    
+    setIsLoadingMore(true);
+    
+    // Simulate loading delay for better UX
+    setTimeout(() => {
+      setVisibleCount(prev => {
+        const newCount = prev + 8;
+        setHasMore(newCount < filteredProperties.length);
+        setIsLoadingMore(false);
+        return newCount;
+      });
+    }, 500);
+  }, [isLoadingMore, hasMore, filteredProperties.length]);
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+          loadMoreProperties();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [hasMore, isLoadingMore, loadMoreProperties]);
+
+  // Get visible properties for display
+  const visibleProperties = filteredProperties.slice(0, visibleCount);
 
   // Safety check for properties array
   if (!properties || !Array.isArray(properties)) {
@@ -115,7 +171,6 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
 
           {/* Results Count */}
           <div className="text-sm text-gray-600">
-            Showing {filteredProperties.length} of {properties.length} properties
           </div>
         </div>
 
@@ -123,7 +178,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
             <div className="text-xl sm:text-2xl font-bold text-blue-600">{filteredProperties.length}</div>
-            <div className="text-xs sm:text-sm text-gray-600">Showing Properties</div>
+            <div className="text-xs sm:text-sm text-gray-600">Total Properties</div>
           </div>
           <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
             <div className="text-xl sm:text-2xl font-bold text-green-600">
@@ -148,7 +203,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
         {/* Property Display */}
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {filteredProperties.map((property) => (
+            {visibleProperties.map((property) => (
               <PropertyCard 
                 key={property.id} 
                 property={property} 
@@ -160,7 +215,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
           </div>
         ) : (
           <div className="space-y-3 sm:space-y-4">
-            {filteredProperties.map((property) => (
+            {visibleProperties.map((property) => (
               <PropertyListItem 
                 key={property.id} 
                 property={property} 
@@ -169,6 +224,32 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
                 onToggleSelect={(checked) => toggleSelect(property.id, checked)}
               />
             ))}
+          </div>
+        )}
+
+        {/* Loading indicator and intersection observer */}
+        {isLoadingMore && (
+          <div className="flex justify-center items-center py-8">
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <span className="text-gray-600">Loading more properties...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Intersection observer target */}
+        {hasMore && !isLoadingMore && (
+          <div ref={observerRef} className="h-10 flex justify-center items-center">
+            <div className="text-gray-400 text-sm">Scroll to load more</div>
+          </div>
+        )}
+
+        {/* End of results message */}
+        {!hasMore && visibleProperties.length > 0 && (
+          <div className="text-center py-8">
+            <div className="text-gray-500 text-sm">
+              You've reached the end of the results
+            </div>
           </div>
         )}
 
