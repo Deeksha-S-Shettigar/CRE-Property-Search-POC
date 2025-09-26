@@ -41,7 +41,7 @@ const CompareModal = ({ properties, isOpen, onClose, onRemove }: CompareModalPro
           <div className="p-4 sm:p-6 overflow-y-auto flex-1">
             {/* Mobile Layout - Stacked Cards */}
             <div className="block md:hidden space-y-4">
-              {properties.map((property, index) => {
+              {properties.map((property) => {
                 const tp = totalPrice(property);
                 const a = age(property);
                 const isPriceBest = tp === bestPrice;
@@ -103,7 +103,7 @@ const CompareModal = ({ properties, isOpen, onClose, onRemove }: CompareModalPro
             {/* Tablet Layout - Horizontal Cards */}
             <div className="hidden sm:block md:hidden">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {properties.map((property, index) => {
+                {properties.map((property) => {
                   const tp = totalPrice(property);
                   const a = age(property);
                   const isPriceBest = tp === bestPrice;
