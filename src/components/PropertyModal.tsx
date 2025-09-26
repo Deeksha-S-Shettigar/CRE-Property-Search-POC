@@ -186,15 +186,6 @@ const PropertyModal = ({ property, isOpen, onClose }: PropertyModalProps) => {
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
-                <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                  Contact Agent
-                </button>
-                <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors">
-                  Schedule Tour
-                </button>
-              </div>
             </div>
           </div>
         </div>

@@ -153,13 +153,13 @@ const PropertyCard = ({ property, onClick, selected = false, onToggleSelect }: P
           </div>
         )}
 
-        {/* Date Listed */}
+        {/* Date Listed and View Details Button */}
         <div className="flex justify-between items-center pt-4 border-t border-gray-200">
           <p className="text-sm text-gray-500">
             Listed: {new Date(property.date_listed).toLocaleDateString()}
           </p>
           <button 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm border border-blue-600"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm border border-blue-600 whitespace-nowrap"
             style={{ backgroundColor: '#2563eb', color: 'white' }}
             onClick={(e) => {
               e.stopPropagation();
