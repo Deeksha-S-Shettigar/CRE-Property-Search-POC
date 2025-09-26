@@ -102,6 +102,11 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
   // Get visible properties for display
   const visibleProperties = filteredProperties.slice(0, visibleCount);
 
+  // Check if selected properties are still in the filtered results
+  const selectedPropertiesInFiltered = Array.from(selectedIds).filter(id => 
+    filteredProperties.some(p => p.id === id)
+  );
+
   // Safety check for properties array
   if (!properties || !Array.isArray(properties)) {
     return (
@@ -263,7 +268,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
       />
 
       {/* Floating Compare Button */}
-      {selectedIds.size >= 2 && (
+      {selectedPropertiesInFiltered.length >= 2 && (
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
           <button
             onClick={() => setIsCompareOpen(true)}
@@ -272,7 +277,7 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h6M3 12h9m-9 5h12" />
             </svg>
-            <span className="text-sm sm:text-base font-medium">Compare ({selectedIds.size})</span>
+            <span className="text-sm sm:text-base font-medium">Compare ({selectedPropertiesInFiltered.length})</span>
           </button>
         </div>
       )}
