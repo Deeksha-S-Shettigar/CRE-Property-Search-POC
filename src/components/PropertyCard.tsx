@@ -1,4 +1,5 @@
 import type { Property } from '../types/Property';
+import PropertyImage from './PropertyImage';
 
 interface PropertyCardProps {
   property: Property;
@@ -35,6 +36,7 @@ const PropertyCard = ({ property, onClick, selected = false, onToggleSelect }: P
     }
   };
 
+
   const totalPrice = property.price_per_sqft * property.total_sqft;
 
   return (
@@ -44,34 +46,37 @@ const PropertyCard = ({ property, onClick, selected = false, onToggleSelect }: P
     >
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
-        {/* Selection Checkbox */}
-        <label className="absolute top-3 left-3 z-10 inline-flex items-center bg-white/90 backdrop-blur p-1 rounded-md shadow">
-          <input
-            type="checkbox"
-            checked={selected}
-            onChange={(e) => {
-              e.stopPropagation();
-              onToggleSelect && onToggleSelect(e.target.checked);
-            }}
-            onClick={(e) => e.stopPropagation()}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
-        </label>
-        <img
-          src={property.images[0] || '/placeholder-property.jpg'}
+        <PropertyImage
+          src={property.images?.[0]}
           alt={property.title}
+          propertyType={property.type}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = 'https://via.placeholder.com/400x300?text=Property+Image';
-          }}
         />
-        <div className="absolute top-4 left-4">
+        
+        {/* Top left section with checkbox and property type */}
+        <div className="absolute top-3 left-3 flex items-center gap-2">
+          {/* Selection Checkbox */}
+          <label className="inline-flex items-center bg-white/90 backdrop-blur p-1 rounded-md shadow">
+            <input
+              type="checkbox"
+              checked={selected}
+              onChange={(e) => {
+                e.stopPropagation();
+                onToggleSelect && onToggleSelect(e.target.checked);
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+          </label>
+          
+          {/* Property Type Badge */}
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(property.type)}`}>
             {property.type.charAt(0).toUpperCase() + property.type.slice(1)}
           </span>
         </div>
-        <div className="absolute top-4 right-4">
+        
+        {/* Price per sqft */}
+        <div className="absolute top-3 right-3">
           <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-sm font-semibold text-gray-800">
             {formatPrice(property.price_per_sqft)}/sqft
           </span>

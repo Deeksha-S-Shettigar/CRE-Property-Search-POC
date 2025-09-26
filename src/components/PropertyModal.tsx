@@ -1,4 +1,5 @@
 import type { Property } from '../types/Property';
+import PropertyImage from './PropertyImage';
 
 interface PropertyModalProps {
   property: Property | null;
@@ -36,6 +37,7 @@ const PropertyModal = ({ property, isOpen, onClose }: PropertyModalProps) => {
     }
   };
 
+
   const totalPrice = property.price_per_sqft * property.total_sqft;
 
   return (
@@ -64,14 +66,11 @@ const PropertyModal = ({ property, isOpen, onClose }: PropertyModalProps) => {
             {/* Image Gallery */}
             <div className="lg:w-1/2 mb-6 lg:mb-0 lg:pr-6">
               <div className="relative h-64 sm:h-80 lg:h-96">
-                <img
-                  src={property.images[0] || 'https://via.placeholder.com/800x600?text=Property+Image'}
+                <PropertyImage
+                  src={property.images?.[0]}
                   alt={property.title}
+                  propertyType={property.type}
                   className="w-full h-full object-cover rounded-t-lg lg:rounded-l-lg lg:rounded-t-none"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'https://via.placeholder.com/800x600?text=Property+Image';
-                  }}
                 />
                 <div className="absolute top-4 left-4">
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(property.type)}`}>

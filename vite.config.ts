@@ -28,7 +28,7 @@ export default defineConfig({
           }
           
           // Keep large data file separate
-          if (id.includes('properties.json') && !id.includes('properties-initial.json')) {
+          if (id.includes('properties.json')) {
             return 'data-full';
           }
           
