@@ -128,9 +128,6 @@ const PropertyGrid = ({ properties }: PropertyGridProps) => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Commercial Real Estate Properties
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">
-            Discover {properties.length} premium commercial properties across various markets
-          </p>
         </div>
 
         {/* Search and Filters */}

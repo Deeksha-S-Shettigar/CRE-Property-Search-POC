@@ -65,7 +65,7 @@ const SearchAndFilters = ({ properties, onFilteredProperties }: SearchAndFilters
   const maxPrice = Math.max(...properties.map(p => p.price_per_sqft * p.total_sqft));
 
   // Calculate size range from properties
-  const minSize = Math.min(...properties.map(p => p.total_sqft));
+  const minSize = 600; // Fixed minimum of 600 sqft
   const maxSize = Math.max(...properties.map(p => p.total_sqft));
 
   // Initialize ranges when properties change
